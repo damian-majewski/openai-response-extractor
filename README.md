@@ -64,12 +64,12 @@ deactivate
 - `./outputs`: Directory for storing the generated output files.
 - `./responses`: Directory for responses.
 
-
 # Usage OpenAI Response Extractor
 
 ## Send API call with file
 - `python request_api.py prompts/text_file` 
 - `python request_api.py --n 5 --t 0.7 prompts/text_file`
+- `python request_api.py --system_message_file ./system-messages/_Default/youareanailangu_1679683410_905.txt prompts/text_file` - you can select the system message to be used when creating answer
 
 ## Extract and merge the output (below script is initiated automatically in the previous)
 - `python extract_merge.py` - without argument will extract latest response file
