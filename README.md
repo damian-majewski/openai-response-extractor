@@ -68,9 +68,9 @@ deactivate
 # Usage OpenAI Response Extractor
 
 ## Send API call with file
-python request_api.py prompts/text_file 
-python request_api.py --n 5 --t 0.7 prompts/text_file 
+- python request_api.py prompts/text_file 
+- python request_api.py --n 5 --t 0.7 prompts/text_file 
 
 ## Extract and merge the output
-python extract_merge.py - without argument will extract latest response file
-python extract_merge.py responses/output_1679591528.json - will extract file from the path
+- python extract_merge.py - without argument will extract latest response file
+- python extract_merge.py responses/output_1679591528.json - will extract file from the path
