@@ -4,6 +4,10 @@ import time
 import argparse
 import os
 import subprocess
+import requests
+
+
+# openai.api_version = "2020-11-07"  # Set the correct API version here
 
 # Directory to save output files
 output_dir = "./responses"
@@ -12,7 +16,7 @@ output_dir = "./responses"
 os.makedirs(output_dir, exist_ok=True)
 
 # Function to generate response
-def response(prompt, max_tokens, t, n, model="text-davinci-002"):
+def response(prompt, max_tokens, t, n, model="gpt-3.5-turbo"):
     try:
         # Convert JSON object to a string
         prompt_string = ''.join([f"{message['role']}: {message['content']}\n" for message in prompt])
@@ -20,17 +24,28 @@ def response(prompt, max_tokens, t, n, model="text-davinci-002"):
         chunks = [prompt_string[i:i+max_tokens] for i in range(0, len(prompt_string), max_tokens)]
         responses = []
         for chunk in chunks:
-            response = openai.Completion.create(
-                engine=model,
-                prompt=chunk,
-                n=n,
-                max_tokens=max_tokens,
-                stop=None,
-                temperature=t,
-            )
-            responses.append(response)
+            url = f"https://api.openai.com/v1/chat/completions"
+            headers = {
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {openai.api_key}"
+            }
+            data = {
+                "model": model,
+                "messages": [{"role": "system", "content": system_message}, {"role": "user", "content": user_prompt}],
+                "n": n,
+                "max_tokens": max_tokens,
+                "stop": None,
+                "temperature": t
+            }
+            response = requests.post(url, headers=headers, json=data)
+            
+            if response.status_code == 200:
+                responses.append(response.json())
+            else:
+                print(f"An error occurred while generating text: {response.text}")
+                return None
         return responses
-    except openai.OpenAIError as e:
+    except Exception as e:
         print(f"An error occurred while generating text: {e}")
         return None
 
@@ -39,7 +54,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--system_message_file", help="Path to input file containing system message", default="./system-messages/_Default/189_youareanailangu_1679744083")
     parser.add_argument("input_file", help="Path to input file containing prompt text")
-    parser.add_argument("--max_tokens", type=int, help="Maximum number of tokens per request", default=4096)
+    parser.add_argument("--max_tokens", type=int, help="Maximum number of tokens per request", default=4000)
     parser.add_argument("--t", type=float, help="Temperature", default=0.4)
     parser.add_argument("--n", type=int, help="Number of responses", default=1)
 
@@ -71,4 +86,4 @@ if __name__ == "__main__":
     time.sleep(1)  # Sleep for 1 second before requesting the next chunk
 
 # Merge and extract the content
-subprocess.run(["python", "./extract_merge.py"])
+subprocess.run(["python", "./extract_merge_gpt3.5.py"])
