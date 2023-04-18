@@ -17,20 +17,24 @@ def extract_text(input_file):
     with open(input_file, "r") as f:
         data = json.load(f)
 
-        for entry in data:
-            for choice in entry['choices']:
-                # Updated this line to access the message content correctly
-                message = choice["message"]
-                if message["role"] == "assistant":
-                    text = message["content"].replace("\n\n", "\n")
-                    texts.append(text.strip())
+        choices = data["choices"]  # Access 'choices' directly from the data dictionary
+        for choice in choices:
+            # Updated this line to access the message content correctly
+            message = choice["message"]
+            if message["role"] == "assistant":
+                text = message["content"].replace("\n\n", "\n")
+                texts.append(text.strip())
 
     return texts
 
 def get_newest_file(input_dir):
     files = [f for f in os.listdir(input_dir) if os.path.isfile(os.path.join(input_dir, f))]
-    newest_file = max(files, key=lambda f: os.path.getctime(os.path.join(input_dir, f)))
-    return os.path.join(input_dir, newest_file)
+
+    if len(files) > 0:
+        newest_file = max(files, key=lambda f: os.path.getctime(os.path.join(input_dir, f)))
+        return newest_file
+    else:
+        return None
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -38,8 +42,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     # Check input file or get the latest response
-    if args.input_file is None:
-        args.input_file = get_newest_file(input_dir)
+    newest_file = get_newest_file(input_dir)
+    if newest_file is not None:
+        args.input_file = os.path.join(input_dir, newest_file)
+    else:
+        print("No files found in the input directory.")
+        exit(1)
+    
 
     texts = extract_text(args.input_file)
 
