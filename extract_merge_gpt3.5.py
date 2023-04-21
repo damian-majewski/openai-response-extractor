@@ -4,9 +4,10 @@ import os
 import glob
 import shutil
 
-output_dir = "./outputs"
-extracts_dir = "./extracts"
-input_dir = './responses'  # Replace this with the path to your input directory
+BASE_DIR = "/Users/damian/git/openai-api-calls"
+output_dir = os.path.join(BASE_DIR, "outputs")
+extracts_dir = os.path.join(BASE_DIR, "extracts")
+input_dir = os.path.join(BASE_DIR, "responses")
 
 # Create directories if they do not exist
 os.makedirs(output_dir, exist_ok=True)
@@ -40,31 +41,36 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--input_file", help="Path to input file")
     args = parser.parse_args()
-    
-    # Check input file or get the latest response
-    newest_file = get_newest_file(input_dir)
-    if newest_file is not None:
-        args.input_file = os.path.join(input_dir, newest_file)
-    else:
-        print("No files found in the input directory.")
-        exit(1)
-    
 
-    texts = extract_text(args.input_file)
+    # Check input file or get the latest response
+    if args.input_file and os.path.exists(args.input_file):
+        input_file = args.input_file
+        print(f"Processing file: {input_file}") # Debugging line
+    else:
+        newest_file = get_newest_file(input_dir)
+        if newest_file is not None:
+            input_file = os.path.join(input_dir, newest_file)
+            print(f"Processing file: {input_file}") # Debugging line
+        else:
+            print("No files found in the input directory.")
+            exit(1)
+
+    texts = extract_text(input_file)
 
     # Save extracted texts to individual files
-    input_basename = os.path.basename(args.input_file)
+    input_basename = os.path.basename(input_file).split("_", 1)[1]
     input_name, input_ext = os.path.splitext(input_basename)
     for i, text in enumerate(texts):
-        output_file = f"{output_dir}/extract_{input_name}_{i}{input_ext}"
+        output_file = os.path.join(output_dir, f"extract_{input_name}_{i}{input_ext}")
         with open(output_file, "w") as f:
             f.write(text)
     
     # Merge extracted texts into a single file
-    merged_file = f"{extracts_dir}/merged_extracted_{input_name}{input_ext}"
-    
+    merged_file = os.path.join(extracts_dir, f"merged_extracted_{input_name}{input_ext}")
+
     # Get the list of individual files and sort them
-    individual_files = glob.glob(f"{output_dir}/extract_{input_name}_*{input_ext}")
+    individual_files = glob.glob(os.path.join(output_dir, f"extract_{input_name}_*{input_ext}"))
+    print(f"Individual files: {individual_files}") # Debugging line
     sorted_files = sorted(individual_files, key=lambda x: int(x.split('_')[-1].split('.')[0]))
     
     # Merge the individual files in the sorted order
