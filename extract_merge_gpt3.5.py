@@ -4,7 +4,8 @@ import os
 import glob
 import shutil
 
-BASE_DIR = "/Users/damian/git/openai-api-calls"
+# Determine the repository base directory from the location of this script
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 output_dir = os.path.join(BASE_DIR, "outputs")
 extracts_dir = os.path.join(BASE_DIR, "extracts")
 input_dir = os.path.join(BASE_DIR, "responses")

@@ -54,7 +54,10 @@ function gpt35-smt() {
   echo "Input file path: ${input_filepath}"
   echo "Assistant message file path: ${assistant_message_filepath}"
 
-  python "/Users/damian/git/openai-api-calls/request_api_gpt3.5.py" \
+  # Determine the directory where this script resides to locate the Python helper
+  script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+  python "${script_dir}/request_api_gpt3.5.py" \
     --smf "${system_message_filepath}" \
     --mt "${max_tokens}" \
     --t "${t}" \

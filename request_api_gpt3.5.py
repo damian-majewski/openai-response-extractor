@@ -125,5 +125,6 @@ def main():
 if __name__ == "__main__":
     main()
 
-# Merge and extract the content
-subprocess.run(["python", "/Users/damian/git/openai-api-calls/extract_merge_gpt3.5.py"])
+# Merge and extract the content using the script located in the same directory
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+subprocess.run(["python", os.path.join(SCRIPT_DIR, "extract_merge_gpt3.5.py")])
