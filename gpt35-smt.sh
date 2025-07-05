@@ -70,4 +70,4 @@ function gpt35-smt() {
 }
 
 # Add the function to .bashrc or .bash_profile
-echo "source /path/to/gpt35-smt-bash-function.sh" >> ~/.bashrc  # or ~/.bash_profile if using macOS
+echo "source /path/to/gpt35-smt.sh" >> ~/.bashrc  # or ~/.bash_profile if using macOS
