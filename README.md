@@ -22,6 +22,8 @@ The Bash alias function simplifies the usage of the Python script by providing a
 You can also use the Python script directly by running the request_api_gpt3.5.py script:
 `python request_api_gpt3.5.py --smf "system_message_filepath" --mt max_tokens --t temperature --n n --amf "assistant_message_filepath" --tp top_p --fp frequency_penalty --pp presence_penalty "input_filepath"`
 
+The final positional argument `input_filepath` is **required** and should point to the prompt file or directory.
+
 ### Example:
 `python request_api_gpt3.5.py --smf "./system-messages/Technology/ansible_playbook" --mt 1000 --t 1.0 --n 3 --amf "./prompts/assistant-messages/Technology/ansible" --tp 1.0 --fp 0.0 --pp 0.0 "./prompts/ansible_playbook"`
 

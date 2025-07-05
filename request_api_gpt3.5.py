@@ -92,7 +92,7 @@ def main():
     parser.add_argument("--tp", type=float, help="Top_p value", default=1.0)
     parser.add_argument("--fp", type=float, help="Frequency penalty", default=0.0)
     parser.add_argument("--pp", type=float, help="Presence penalty", default=0.0)
-    parser.add_argument("input_file", help="Path to input file containing prompt text", nargs='?')
+    parser.add_argument("input_file", help="Path to input file containing prompt text (required)")
 
     args = parser.parse_args()
 
